@@ -4,7 +4,6 @@ package stepDefinitions;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import io.restassured.RestAssured;
-import io.restassured.internal.common.assertion.Assertion;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -33,21 +32,19 @@ public class LoginSteps {
 
     @Given("^I use the body with email \"([^\"]*)\" and password \"([^\"]*)\"$")
     public void iUseTheBody(String email, String password) throws Throwable {
-         response = given()
-                .relaxedHTTPSValidation()
-                .accept("application/vnd.api+json")
-                .contentType("application/json")
+        response = given()
                 .body("{\n" +
                         "  \"session\": {\n" +
                         "        \"email\": \"batata@gmail.com\",\n" +
                         "        \"password\": \"123456\"\n" +
                         "  }\n" +
                         "}")
+                .accept("application/vnd.api+json")
+                .contentType("application/json")
                 .when()
                 .post("/sessions")
                 .then().extract().response();
     }
-
 
 //    @Given("^I send the POST request$")
 //    public void iSendThePostRequest() throws Throwable {
