@@ -36,6 +36,7 @@
         <aspectj.version>1.9.4</aspectj.version>
         <maven.plugin.version>2.22.2</maven.plugin.version>
         <maven.clean.version>3.1.0</maven.clean.version>
+        <maven-cucumber-reporting-version>5.7.0</maven-cucumber-reporting-version>
         <maven.compiler.version>3.8.0</maven.compiler.version>
         <maven.source.version>11</maven.source.version>
         <maven.target.version>11</maven.target.version>
@@ -66,41 +67,11 @@
                         <version>${aspectj.version}</version>
                     </dependency>
                 </dependencies>
-                <configuration>
-                    <includes>
-                        <include>**/Test*.java</include>
-                        <include>**/*Test.java</include>
-                        <include>**/*Tests.java</include>
-                        <include>**/*TestCase.java</include>
-                    </includes>
-                    <!-- Defina como TRUE para pular os testes em execução, mas ainda compilá-los. -->
-                    <skipTests>${skipUTs}</skipTests>
-                    <useSystemClassLoader>false</useSystemClassLoader>
-                    <argLine>
-                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
-                    </argLine>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>${maven.plugin.version}</version>
-                <configuration>
-                    <!-- Defina como TRUE para pular os testes de integração. -->
-                    <skipTests>${skipITs}</skipTests>
-                    <includes>
-                        <include>**/IT*.java</include>
-                        <include>**/*IT.java</include>
-                        <include>**/*ITCase.java</include>
-                    </includes>
-                    <excludes>
-                        <exclude>**/AllContractIT.java</exclude>
-                    </excludes>
-                    <useSystemClassLoader>false</useSystemClassLoader>
-                    <argLine>
-                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
-                    </argLine>
-                </configuration>
                 <dependencies>
                     <dependency>
                         <groupId>org.aspectj</groupId>
@@ -206,6 +177,12 @@
             <version>${cucumber-jvm-deps-version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>net.masterthought</groupId>
+            <artifactId>maven-cucumber-reporting</artifactId>
+            <version>${maven-cucumber-reporting-version}</version>
+        </dependency>
+
     </dependencies>
 </project>
 

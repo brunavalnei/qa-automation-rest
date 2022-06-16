@@ -33,19 +33,16 @@ public class LoginSteps {
 
     @Given("^I use the body with email \"([^\"]*)\" and password \"([^\"]*)\"$")
     public void iUseTheBody(String email, String password) throws Throwable {
-        response = given()
+         response = given()
                 .relaxedHTTPSValidation()
-                .auth()
-                .preemptive()
-                .basic(email, password)
-                .body("{\n" +
-                        "  \"session\": {\n" +
-                        "        \"email\": ${email},\n" +
-                        "        \"password\": ${password}\n" +
-                        "  }\n" +
-                        "}")
                 .accept("application/vnd.api+json")
                 .contentType("application/json")
+                .body("{\n" +
+                        "  \"session\": {\n" +
+                        "        \"email\": \"batata@gmail.com\",\n" +
+                        "        \"password\": \"123456\"\n" +
+                        "  }\n" +
+                        "}")
                 .when()
                 .post("/sessions")
                 .then().extract().response();
@@ -75,14 +72,16 @@ public class LoginSteps {
         String url = "https://api-de-tarefas.herokuapp.com";
         RestAssured.baseURI = url;
         RequestSpecification httpRequest = RestAssured.given();
+        String email = "batata@gmail.com";
+        String password = "123456";
         Response response = given()
                 .relaxedHTTPSValidation()
                 .accept("application/vnd.api+json")
                 .contentType("application/json")
                 .body("{\n" +
                         "  \"session\": {\n" +
-                        "        \"email\": \"batata@gmail.com\",\n" +
-                        "        \"password\": \"123456\"\n" +
+                        "        \"email\": \"${email}\",\n" +
+                        "        \"password\": \"${password}\"\n" +
                         "  }\n" +
                         "}")
                 .when()

@@ -7,10 +7,10 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-//        format={"pretty", "json:target/"},
         features = "src/test/java/feature/"
         ,glue = {"stepDefinitions"}
-//        format={}
+        ,plugin = {"pretty", "html:target/site/cucumber-pretty", "json:target/cucumber/cucumber.json"}
+        ,monochrome = true
 
 )
 class TestRunner {
