@@ -40,8 +40,8 @@ public class LoginSteps {
                 .basic(email, password)
                 .body("{\n" +
                         "  \"session\": {\n" +
-                        "        \"email\": \"batata@gmail.com\",\n" +
-                        "        \"password\": \"123456\"\n" +
+                        "        \"email\": ${email},\n" +
+                        "        \"password\": ${password}\n" +
                         "  }\n" +
                         "}")
                 .accept("application/vnd.api+json")
