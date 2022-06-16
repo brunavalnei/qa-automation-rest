@@ -10,8 +10,10 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.request;
 
 public class LoginSteps {
 
@@ -32,13 +34,12 @@ public class LoginSteps {
 
     @Given("^I use the body with email \"([^\"]*)\" and password \"([^\"]*)\"$")
     public void iUseTheBody(String email, String password) throws Throwable {
+        Map<String, Object> body = new HashMap<String, Object>();
+        body.put("email", email);
+        body.put("password", password);
+
         response = given()
-                .body("{\n" +
-                        "  \"session\": {\n" +
-                        "        \"email\": \"batata@gmail.com\",\n" +
-                        "        \"password\": \"123456\"\n" +
-                        "  }\n" +
-                        "}")
+                .body(body)
                 .accept("application/vnd.api+json")
                 .contentType("application/json")
                 .when()
