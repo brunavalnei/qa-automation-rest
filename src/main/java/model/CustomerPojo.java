@@ -9,6 +9,5 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 
 public class CustomerPojo {
-    private String emailUser;
-    private String password;
+    private String baseUrl;
 }

@@ -1,5 +1,6 @@
-package stepDefinitions;
+package stepDefinitions.restApi;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import io.restassured.RestAssured;
@@ -14,6 +15,8 @@ import static io.restassured.RestAssured.given;
 
 public class LoginSteps {
 
+    JsonBody JsonBody = new JsonBody();
+
     CustomerPojo customer = new CustomerPojo();
     private static Response response;
     private RequestSpecification request;
@@ -21,6 +24,11 @@ public class LoginSteps {
     @Given("^I have baseURI \"([^\"]*)\"$")
     public void iHaveUrl(String url) throws Throwable {
         RestAssured.baseURI = url;
+    }
+
+    @Given("^I use the route \"([^\"]*)\"$")
+    public void iUseTheRoute(String endpoint) throws Throwable {
+        customer.setBaseUrl(endpoint);
     }
 
     @Given("^I use header$")
@@ -32,31 +40,35 @@ public class LoginSteps {
                 .headers();
     }
 
-    @Given("^I use the body with email \"([^\"]*)\" and password \"([^\"]*)\"$")
-    public void iUseTheBody(String email, String password) throws Throwable {
-        customer.setEmailUser(email);
-        customer.setPassword(password);
-    }
 
-    @Given("^I send the POST request with endpoint \"([^\"]*)\"$")
-    public void iSendThePostRequest(String endpoint) throws Throwable {
+    @Given("^I send the POST request$")
+    public void iSendThePostRequestTest() throws Throwable {
         response = request
                 .when()
-                .body("{\n" +
-                        "  \"session\": {\n" +
-                        "        \"email\":\"" + customer.getEmailUser() + "\", " + "\n"+
-                        "        \"password\": \"" + customer.getPassword()  + "\" " + "\n"+
-                        "  }\n" +
-                        "}")
+                .body(JsonBody.getJsonBodyString())
                 .log()
                 .body()
-                .post(endpoint)
+                .post(customer.getBaseUrl())
                 .then().extract().response();
     }
 
+    @Given("^I send the body$")
+    public void setJsonBody(String jsonBodyT) throws Throwable {
+        JsonBody.setJsonBodyString(JsonBody.replaceVariablesValues(jsonBodyT));
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            Object json = mapper.readValue(JsonBody.getJsonBodyString(), Object.class);
+            String prettyJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+            stepDefinitions.Hooks.scenario.write(prettyJson);
+        } catch (Exception e) {
+            Hooks.scenario.write(JsonBody.getJsonBodyString());
+        }
+    }
+
     @Then("^Http response should be (\\d+)$")
-    public void httpResponseShouldBe(int statusCode) throws Throwable {
-        Assert.assertEquals(statusCode, response.getStatusCode());
+    public void httpResponseShouldBe(Integer statusCode) throws Throwable {
+        Integer responseStatusCode = response.getStatusCode();
+        Assert.assertEquals(responseStatusCode.toString(), statusCode.toString());
     }
 
     @Then("^The response JSON must \"([^\"]*)\" have as the string \"([^\"]*)\"$")
@@ -64,43 +76,44 @@ public class LoginSteps {
         JsonPath jsonPathEvaluator = response.jsonPath();
         String message = jsonPathEvaluator.get(key);
         Assert.assertEquals(message, value);
+        Hooks.scenario.write(message);
     }
 
-    @Then("^I save the auth token$")
-    public void save_auth_token() throws Throwable {
+
+    @Then("^I save the response value \"([^\"]*)\"$")
+    public void i_save_the_response_value_as(String responseValue) throws Throwable {
         JsonPath jsonPathEvaluator = response.jsonPath();
-        String authToken = jsonPathEvaluator.get("data.attributes.auth-token");
-        System.out.println(authToken);
+        String method = jsonPathEvaluator.get(responseValue);
+        Hooks.scenario.write(method);
     }
+        @Test
+        @Given("^I have login and password$")
+        public void iHaveLoginAndPassword () throws Throwable {
+            String url = "https://api-de-tarefas.herokuapp.com";
+            RestAssured.baseURI = url;
+            RequestSpecification httpRequest = RestAssured.given();
+            String email = "batata@gmail.com";
+            String password = "123456";
+            Response response = given()
+                    .relaxedHTTPSValidation()
+                    .accept("application/vnd.api+json")
+                    .contentType("application/json")
+                    .body("{\n" +
+                            "  \"session\": {\n" +
+                            "        \"email\": \"${email}\",\n" +
+                            "        \"password\": \"${password}\"\n" +
+                            "  }\n" +
+                            "}")
+                    .when()
+                    .post("/sessions")
+                    .then()
+                    .statusCode(200)
+                    .and()
+                    .log().all().extract().response();
 
-    @Test
-    @Given("^I have login and password$")
-    public void iHaveLoginAndPassword() throws Throwable {
-        String url = "https://api-de-tarefas.herokuapp.com";
-        RestAssured.baseURI = url;
-        RequestSpecification httpRequest = RestAssured.given();
-        String email = "batata@gmail.com";
-        String password = "123456";
-        Response response = given()
-                .relaxedHTTPSValidation()
-                .accept("application/vnd.api+json")
-                .contentType("application/json")
-                .body("{\n" +
-                        "  \"session\": {\n" +
-                        "        \"email\": \"${email}\",\n" +
-                        "        \"password\": \"${password}\"\n" +
-                        "  }\n" +
-                        "}")
-                .when()
-                .post("/sessions")
-                .then()
-                .statusCode(200)
-                .and()
-                .log().all().extract().response();
+            JsonPath jsonPathEvaluator = response.jsonPath();
+            String authToken = jsonPathEvaluator.get("data.attributes.auth-token");
+            System.out.println(authToken);
 
-        JsonPath jsonPathEvaluator = response.jsonPath();
-        String authToken = jsonPathEvaluator.get("data.attributes.auth-token");
-        System.out.println(authToken);
-
+        }
     }
-}
