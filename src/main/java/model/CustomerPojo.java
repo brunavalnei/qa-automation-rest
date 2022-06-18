@@ -10,4 +10,6 @@ import lombok.Setter;
 
 public class CustomerPojo {
     private String baseUrl;
+    private String email;
+
 }
