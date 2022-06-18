@@ -1,6 +1,5 @@
 package stepDefinitions;
 
-
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import io.restassured.RestAssured;
@@ -58,6 +57,13 @@ public class LoginSteps {
     @Then("^Http response should be (\\d+)$")
     public void httpResponseShouldBe(int statusCode) throws Throwable {
         Assert.assertEquals(statusCode, response.getStatusCode());
+    }
+
+    @Then("^The response JSON must \"([^\"]*)\" have as the string \"([^\"]*)\"$")
+    public void theResponseMustHaveAsString(String key, String value) throws Throwable {
+        JsonPath jsonPathEvaluator = response.jsonPath();
+        String message = jsonPathEvaluator.get(key);
+        Assert.assertEquals(message, value);
     }
 
     @Then("^I save the auth token$")
