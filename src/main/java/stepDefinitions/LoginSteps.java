@@ -1,4 +1,4 @@
-package stepDefinitions.restApi;
+package stepDefinitions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
@@ -16,7 +16,8 @@ import static io.restassured.RestAssured.given;
 
 public class LoginSteps {
 
-    static JsonBody JsonBody = new JsonBody();
+
+    JsonBody jsonBody = new JsonBody();
 
     CustomerPojo customer = new CustomerPojo();
     private static Response response;
@@ -62,7 +63,7 @@ public class LoginSteps {
             ObjectMapper mapper = new ObjectMapper();
             Object json = mapper.readValue(JsonBody.getJsonBodyString(), Object.class);
             String prettyJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
-            stepDefinitions.Hooks.scenario.write(prettyJson);
+            Hooks.scenario.write(prettyJson);
         } catch (Exception e) {
             Hooks.scenario.write(JsonBody.getJsonBodyString());
         }

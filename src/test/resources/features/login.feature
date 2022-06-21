@@ -1,5 +1,8 @@
 Feature: POST login
 
+#  Scenario: Teste
+#  Given I have login and password
+
   Background: Caminho
     Given I have baseURI "https://api-de-tarefas.herokuapp.com"
     Given I use header

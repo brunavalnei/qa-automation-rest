@@ -1,4 +1,4 @@
-package stepDefinitions.restApi;
+package stepDefinitions;
 
 
 import java.util.LinkedHashMap;

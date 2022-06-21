@@ -11,167 +11,168 @@
     <description>Repositorio de testes automatizados API(rest)
     </description>
 
-    <properties>
-        <java.version>11</java.version>
-        <junit.version>4.13.2</junit.version>
-        <restassured.version>5.1.1</restassured.version>
-        <jsonpath.version>5.1.1</jsonpath.version>
-        <jsonxml.version>5.1.1</jsonxml.version>
-        <jsonschema.version>4.3.0</jsonschema.version>
-        <google.json.version>1.1.1</google.json.version>
-        <gson.version>2.8.9</gson.version>
-        <java.faker.version>1.0.2</java.faker.version>
-        <commons>1.2</commons>
-        <log4j.version>1.2.17</log4j.version>
-        <org.apache.log4j.version>1.2.13.v200706111418</org.apache.log4j.version>
-        <jakarta.annotation.api.version>2.1.0</jakarta.annotation.api.version>
-        <cucumber-java-version>1.2.5</cucumber-java-version>
-        <cucumber-reporting-version>5.7.1</cucumber-reporting-version>
-        <gherkin-version></gherkin-version>
-        <gherkin-formatter-version>1.3.0</gherkin-formatter-version>
-        <lombok-version>1.18.14</lombok-version>
-        <cucumber-jvm-deps-version>1.0.3</cucumber-jvm-deps-version>
-        <net-masterthought-version>5.7.0</net-masterthought-version>
-        <cucumber-core-version>7.3.4</cucumber-core-version>
-        <cucumber-html-version>7.3.4</cucumber-html-version>
-        <cucumber-testng-version>7.3.4</cucumber-testng-version>
-        <cucumber-junit-version>1.2.0</cucumber-junit-version>
-        <cucumber-html-version>0.2.7</cucumber-html-version>
-        <cucumber-core-version>1.2.6</cucumber-core-version>
-        <aspectj.version>1.9.4</aspectj.version>
-        <maven.plugin.version>2.22.2</maven.plugin.version>
-        <maven.clean.version>3.1.0</maven.clean.version>
-        <maven-cucumber-reporting-version>5.7.0</maven-cucumber-reporting-version>
-        <maven.compiler.version>3.8.0</maven.compiler.version>
-        <maven.source.version>11</maven.source.version>
-        <maven.target.version>11</maven.target.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEnconding>UTF-8</project.reporting.outputEnconding>
-    </properties>
-
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.compiler.version}</version>
+                <version>3.8.0</version>
                 <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                    <source>${maven.source.version}</source>
-                    <target>${maven.target.version}</target>
+                    <encoding>UTF-8</encoding>
+                    <source>11</source>
+                    <target>11</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>net.masterthought</groupId>
+                <artifactId>maven-cucumber-reporting</artifactId>
+                <version>5.7.0</version>
+                <executions>
+                    <execution>
+                        <id>execution</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <projectName>qa-automation-test</projectName>
+                            <skip>false</skip>
+                            <outputDirectory>reports/html-reports</outputDirectory>
+                            <inputDirectory>target/cucumber-reports</inputDirectory>
+                            <jsonFiles>
+                                <param>**/cucumber.json</param>
+                            </jsonFiles>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
 
     <dependencies>
         <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-testng</artifactId>
+            <version>7.3.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>4.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>4.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-core</artifactId>
+            <version>4.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-jvm-deps</artifactId>
+            <version>1.0.6</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-html</artifactId>
+            <version>0.2.7</version>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured-all</artifactId>
+            <version>5.1.1</version>
+        </dependency>
+
+        <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
-            <version>${restassured.version}</version>
+            <version>5.1.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>json-path</artifactId>
-            <version>${jsonpath.version}</version>
+            <version>5.1.0</version>
         </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>json-schema-validator</artifactId>
-            <version>${jsonschema.version}</version>
+            <version>5.1.1</version>
         </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>compile</scope>
-        </dependency>
+
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
-            <version>${google.json.version}</version>
+            <version>1.1.1</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
+            <version>2.8.9</version>
         </dependency>
         <dependency>
             <groupId>com.github.javafaker</groupId>
             <artifactId>javafaker</artifactId>
-            <version>${java.faker.version}</version>
+            <version>1.0.2</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-java</artifactId>
-            <version>${cucumber-java-version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-testng</artifactId>
-            <version>${cucumber-testng-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-html</artifactId>
-            <version>${cucumber-html-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-core</artifactId>
-            <version>${cucumber-core-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-junit</artifactId>
-            <version>${cucumber-junit-version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-jvm-deps</artifactId>
-            <version>${cucumber-jvm-deps-version}</version>
+            <version>1.2.17</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok-version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>me.jvt.cucumber</groupId>
-            <artifactId>gherkin-formatter</artifactId>
-            <version>${gherkin-formatter-version}</version>
+            <version>1.18.14</version>
         </dependency>
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.12</version>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13</version>
         </dependency>
         <dependency>
             <groupId>net.masterthought</groupId>
             <artifactId>cucumber-reporting</artifactId>
-            <version>5.7.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
+            <version>5.7.0</version>
         </dependency>
 
         <dependency>
-            <groupId>jakarta.annotation</groupId>
-            <artifactId>jakarta.annotation-api</artifactId>
-            <version>${jakarta.annotation.api.version}</version>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>7.6.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20220320</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>1.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>5.2.2</version>
         </dependency>
 
     </dependencies>
 </project>
-
