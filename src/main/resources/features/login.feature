@@ -21,23 +21,6 @@ Feature: POST login
     Then Http response should be 200
     * I save the response value "data.attributes.auth-token"
 
-
-  @Negative
-  Scenario: status code 401: Email incorreto
-    * I send the body
-    """
-        {
-            "session": {
-                "email": "batata1@gmail.com",
-                "password": ""
-            }
-        }
-    """
-    * I send the POST request
-    * The response JSON must "errors" have as the string "Senha ou e-mail inválidos"
-
-
-
   @Negative
   Scenario Outline: status code 401 <testDescription>
     * I send the body
