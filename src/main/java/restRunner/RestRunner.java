@@ -3,7 +3,8 @@ package restRunner;
 
 import common.utils.FileManagerUtils;
 import common.utils.PropertiesUtil;
-import cucumber.api.cli.Main;
+
+import io.cucumber.core.cli.Main;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -55,7 +56,7 @@ public class RestRunner {
         }
 
 //        configuração do caminho para stepDefinitions
-        String glue = "scr/main/java/stepDefinitions/restApi";
+        String glue = "stepDefinitions";
         System.out.println(glue);
 
         String[] plugins = {"pretty", "json:" + reportDir + reportDirName + ".json"};
@@ -84,12 +85,12 @@ public class RestRunner {
 
 //        relatório
         String reportAbsPath = new File(reportDir).getAbsolutePath();
-        String report = reportAbsPath + "cucumber-html-reports/overview-features.html";
+        String report = reportAbsPath + "/cucumber-html-reports/overview-features.html";
 
         System.out.println("REPORT GENERATED: ");
         System.out.println(report);
 
-//        if (nonNull(featuresNames))
-//            fUtils.tempDirectoryDelete(TEMP_FOLDER);
+        if (nonNull(featuresNames))
+            fUtils.tempDirectoryDelete(TEMP_FOLDER);
     }
 }

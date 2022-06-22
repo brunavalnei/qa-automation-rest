@@ -8,19 +8,19 @@ import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import model.CustomerPojo;
+import model.Customer;
 import org.junit.Assert;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
 
-public class LoginSteps {
+public class AssuredSteps {
 
+   Customer customer = new Customer();
     static JsonBody JsonBody = new JsonBody();
 
-    CustomerPojo customer = new CustomerPojo();
-    private static Response response;
-    private RequestSpecification request;
+    public Response response;
+    public RequestSpecification request;
 
     Faker faker = new Faker();
 
@@ -31,8 +31,9 @@ public class LoginSteps {
 
     @Given("^I use the route \"([^\"]*)\"$")
     public void iUseTheRoute(String endpoint) throws Throwable {
-        customer.setBaseUrl(endpoint);
+        customer.setEndpointBase(endpoint);
     }
+
 
     @Given("^I use header$")
     public void iUseHeader() throws Throwable {
@@ -51,7 +52,7 @@ public class LoginSteps {
                 .body(JsonBody.getJsonBodyString())
                 .log()
                 .body()
-                .post(customer.getBaseUrl())
+                .post(customer.getEndpointBase())
                 .then().extract().response();
     }
 

@@ -1,4 +1,4 @@
-Feature: POST login
+Feature: POST Criar contrato
 
   Background: Caminho
     Given I have baseURI "https://api-de-tarefas.herokuapp.com"
