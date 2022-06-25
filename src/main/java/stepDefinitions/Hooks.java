@@ -1,66 +1,67 @@
 package stepDefinitions;
 
 import cucumber.api.Scenario;
-import cucumber.api.java.Before;
+import org.apache.log4j.Logger;
+import org.junit.Before;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+
 
 public class Hooks {
+    private static Collection<String> taggs;
+    public static Scenario scenario;
+    private static String hostname;
+    private static String responseJson;
+    private static Logger log;
 
-    private static Collection<String> tags;
-    static Scenario scenario;
 
-    private static boolean exceptException;
-
-
-    private static List<Exception> exceptions = new ArrayList<>();
 
     @Before
-    public void renBeforeWithOrder(Scenario scenario) throws Throwable{
+    public void runBeforeWithOrder(Scenario scenario) throws Throwable{
+        Hooks.setScenario(scenario);
+        KeepSnarion(scenario);
+    }
+
+    public static void KeepSnarion(Scenario scenario){
+        setTaggs(scenario.getSourceTagNames());
+    }
+
+    public static Collection<String> getTaggs(){
+        return taggs;
+    }
+    public static void setTaggs(Collection<String> taggs){
+        Hooks.taggs = taggs;
+    }
+
+    public static Scenario getScenario(){
+        return scenario;
+    }
+    public static void setScenario(Scenario scenario){
         Hooks.scenario = scenario;
-        KeepScenarion(scenario);
     }
 
-    public void KeepScenarion(Scenario scenario){
-        Hooks.tags = scenario.getSourceTagNames();
+    public static String getHostname(){
+        return  hostname;
     }
 
-    public void expectException() {
-        exceptException = true;
+    public static void setHostname(String hostname){
+        Hooks.hostname = hostname;
     }
 
-    public static void add(Exception e) throws Exception{
-        if (!exceptException){
-            throw  e;
-        }
-        exceptions.add(e);
+    public static String getResponseJson(){
+        return  responseJson;
     }
 
-    public static List<Exception> getExceptions(){
-        return  exceptions;
+    public static void setResponseJson(String responseJson){
+        Hooks.responseJson = responseJson;
     }
 
-    public static void screenShotAlert() throws Throwable{
-        Rectangle screenRect = new Rectangle(0, 0, 0, 0);
-        for (GraphicsDevice gd : GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()){
-            screenRect = screenRect.union(gd.getDefaultConfiguration().getBounds());
-        }
-        BufferedImage image = new Robot().createScreenCapture(screenRect);
+    public static  Logger getLog(){
+        return getLog();
+    }
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(image, "png", baos);
-        baos.flush();
-        byte[] imageInByte = baos.toByteArray();
-        baos
-                .close();
-
-        scenario.embed(imageInByte, "image/png");
+    public static void setLog(Logger log){
+        Hooks.log = log;
     }
 
 }

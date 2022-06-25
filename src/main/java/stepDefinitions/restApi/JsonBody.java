@@ -1,5 +1,4 @@
-package stepDefinitions;
-
+package stepDefinitions.restApi;
 
 import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
