@@ -8,7 +8,7 @@
     <artifactId>qa-automation-test</artifactId>
     <version>1.0.1-SNAPSHOT</version>
     <name>qa-automation-test</name>
-    <description>Repositorio de testes automatizados API(rest)
+    <description>Repositório de testes automatizados API(rest)
     </description>
 
     <build>
@@ -22,29 +22,6 @@
                     <source>11</source>
                     <target>11</target>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>net.masterthought</groupId>
-                <artifactId>maven-cucumber-reporting</artifactId>
-                <version>5.7.0</version>
-                <executions>
-                    <execution>
-                        <id>execution</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <projectName>qa-automation-test</projectName>
-                            <skip>false</skip>
-                            <outputDirectory>reports/html-reports</outputDirectory>
-                            <inputDirectory>target/cucumber-reports</inputDirectory>
-                            <jsonFiles>
-                                <param>**/cucumber.json</param>
-                            </jsonFiles>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
