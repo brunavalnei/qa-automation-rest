@@ -53,12 +53,42 @@ public class AssuredSteps {
     }
 
 
+    @Given("^I send the GET request$")
+    public void iSendTheGet() {
+        response = given()
+                .when()
+                .get(HttpClient.getCompletePath())
+                .then()
+                .and()
+                .log().all().extract().response();
+    }
+
     @Given("^I send the POST request$")
     public void ISendThePOSTRequestT() {
         response = given()
                 .contentType("application/json")
                 .body(JsonBody.getJsonBodyString())
                 .post(HttpClient.getCompletePath())
+                .then()
+                .and()
+                .log().all().extract().response();
+    }
+
+    @Given("^I send the PUT request$")
+    public void iSendThePutRequestTest() throws Throwable {
+        response = given()
+                .contentType("application/json")
+                .when()
+                .body(JsonBody.getJsonBodyString())
+                .put(HttpClient.getCompletePath())
+                .then().extract().response();
+    }
+
+    @Given("^I send the DELETE request$")
+    public void ISendTheDELETERequest() {
+        response = given()
+                .contentType("application/json")
+                .delete(HttpClient.getCompletePath())
                 .then()
                 .and()
                 .log().all().extract().response();
@@ -91,7 +121,6 @@ public class AssuredSteps {
         Hooks.scenario.write(message);
     }
 
-
     @Then("^I save the response value \"([^\"]*)\"$")
     public void iSaveTheResponseValue(String responseValue) throws Throwable {
         JsonPath jsonPathEvaluator = response.jsonPath();
@@ -105,63 +134,4 @@ public class AssuredSteps {
         Hooks.scenario.write(body.asPrettyString());
     }
 
-    @Test
-    @Given("^I have login and password$")
-    public void iHaveLoginAndPassword() throws Throwable {
-        String url = "https://api-de-tarefas.herokuapp.com";
-        RestAssured.baseURI = url;
-        RequestSpecification httpRequest = RestAssured.given();
-        String email = "batata@gmail.com";
-        String password = "123456";
-        Response response = given()
-                .relaxedHTTPSValidation()
-                .accept("application/vnd.api+json")
-                .contentType("application/json")
-                .body("{\n" +
-                        "  \"session\": {\n" +
-                        "        \"email\": \"${email}\",\n" +
-                        "        \"password\": \"${password}\"\n" +
-                        "  }\n" +
-                        "}")
-                .when()
-                .post("/sessions")
-                .then()
-                .statusCode(200)
-                .and()
-                .log().all().extract().response();
-
-        JsonPath jsonPathEvaluator = response.jsonPath();
-        String authToken = jsonPathEvaluator.get("data.attributes.auth-token");
-        System.out.println(authToken);
-
-    }
-
-    @Test
-    @Given("^Sicred$")
-    public void sicredi() throws Throwable {
-        String url = "http://localhost:8090/api/v1";
-        RestAssured.baseURI = url;
-        RequestSpecification httpRequest = RestAssured.given();
-        String email = "batata@gmail.com";
-        String password = "123456";
-        Response response = given()
-                .relaxedHTTPSValidation()
-                .accept("application/vnd.api+json")
-                .contentType("application/json")
-                .body("  {\n" +
-                        "        \"nome\": \"" + faker.name().fullName() + "\", " + "\n" +
-                        "        \"cpf\": \"" + generatorCpf + "\", " + "\n" +
-                        "        \"email\": \"" + faker.internet().emailAddress() + "\", " + "\n" +
-                        "        \"valor\": 1300,\n" +
-                        "        \"parcelas\": 3,\n" +
-                        "        \"seguro\": true\n" +
-                        "    }")
-                .when()
-                .post("/simulacoes")
-                .then()
-                .statusCode(201)
-                .and()
-                .log().all().extract().response();
-
-    }
 }
