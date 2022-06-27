@@ -1,10 +1,8 @@
 Feature: POST login
 
   Background: Caminho
-    Given I have baseURI "https://api-de-tarefas.herokuapp.com"
-    Given I use header
-    * I use the route "/sessions"
-
+    Given I have baseURI "herokuapp"
+    Given I have basePath "/sessions"
 
   @Positive
   Scenario: status code 200: Login do usuário
@@ -18,24 +16,9 @@ Feature: POST login
         }
     """
     * I send the POST request
+    Then I print the response
     Then Http response should be 200
     * I save the response value "data.attributes.auth-token"
-
-
-  @Negative
-  Scenario: status code 401: Email incorreto
-    * I send the body
-    """
-        {
-            "session": {
-                "email": "batata1@gmail.com",
-                "password": ""
-            }
-        }
-    """
-    * I send the POST request
-    * The response JSON must "errors" have as the string "Senha ou e-mail inválidos"
-
 
 
   @Negative
@@ -50,6 +33,7 @@ Feature: POST login
         }
     """
     * I send the POST request
+    Then I print the response
     * The response JSON must "errors" have as the string "Senha ou e-mail inválidos"
 
     Examples:

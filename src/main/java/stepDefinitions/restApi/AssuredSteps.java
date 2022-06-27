@@ -2,17 +2,24 @@ package stepDefinitions.restApi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
+import common.utils.generator.DocumentsBrazil;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
+import httpClient.HttpClient;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import io.restassured.response.ResponseBody;
 import io.restassured.specification.RequestSpecification;
 import model.Customer;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.web.util.UriUtils;
+
+import java.util.Locale;
 
 import static io.restassured.RestAssured.given;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class AssuredSteps {
 
@@ -22,18 +29,19 @@ public class AssuredSteps {
     public Response response;
     public RequestSpecification request;
 
-    Faker faker = new Faker();
+    Faker faker = new Faker(new Locale("pt-BR"));
+    String generatorCpf = new DocumentsBrazil().cpf();
 
     @Given("^I have baseURI \"([^\"]*)\"$")
-    public void iHaveUrl(String url) throws Throwable {
-        RestAssured.baseURI = url;
+    public void iHaveBaseURI(String baseUri) {
+        Api.setDomain(baseUri);
     }
 
-    @Given("^I use the route \"([^\"]*)\"$")
-    public void iUseTheRoute(String endpoint) throws Throwable {
-        customer.setEndpointBase(endpoint);
+    @Given("^I have basePath \"([^\"]*)\"$")
+    public void iHaveBasePath(String basePath) throws Throwable {
+        Api.setPath(UriUtils.encodeQuery(JsonBody.replaceVariablesValues(basePath), UTF_8));
+        Hooks.scenario.write(HttpClient.getCompletePath());
     }
-
 
     @Given("^I use header$")
     public void iUseHeader() throws Throwable {
@@ -46,14 +54,14 @@ public class AssuredSteps {
 
 
     @Given("^I send the POST request$")
-    public void iSendThePostRequestTest() throws Throwable {
-        response = request
-                .when()
+    public void ISendThePOSTRequestT() {
+        response = given()
+                .contentType("application/json")
                 .body(JsonBody.getJsonBodyString())
-                .log()
-                .body()
-                .post(customer.getEndpointBase())
-                .then().extract().response();
+                .post(HttpClient.getCompletePath())
+                .then()
+                .and()
+                .log().all().extract().response();
     }
 
     @Given("^I send the body$")
@@ -91,27 +99,11 @@ public class AssuredSteps {
         Hooks.scenario.write(method);
     }
 
-    public static String loadVariable(String userKey){
-        return JsonBody.getUserParameters().get("{ " + userKey + "}");
+    @Given("^I print the response$")
+    public void iPrintTheResponse() throws Throwable {
+        ResponseBody body = response.getBody();
+        Hooks.scenario.write(body.asPrettyString());
     }
-    public void saveValue(String userKey) throws Throwable{
-        loadVariable(userKey);
-        Hooks.scenario.write(JsonBody.getUserParameters().get("{ " + userKey + "}"));
-    }
-    @Given("^email$")
-    public void email() throws Throwable {
-
-//        Hooks.scenario.write(customer.getEmail());
-//        String email = null;
-//        email = faker.internet().emailAddress();
-//        customer.setEmail(email);
-//        customer.getEmail();
-////        System.out.println(email);
-//        Hooks.scenario.write(customer.getEmail());
-
-
-    }
-
 
     @Test
     @Given("^I have login and password$")
@@ -141,6 +133,35 @@ public class AssuredSteps {
         JsonPath jsonPathEvaluator = response.jsonPath();
         String authToken = jsonPathEvaluator.get("data.attributes.auth-token");
         System.out.println(authToken);
+
+    }
+
+    @Test
+    @Given("^Sicred$")
+    public void sicredi() throws Throwable {
+        String url = "http://localhost:8090/api/v1";
+        RestAssured.baseURI = url;
+        RequestSpecification httpRequest = RestAssured.given();
+        String email = "batata@gmail.com";
+        String password = "123456";
+        Response response = given()
+                .relaxedHTTPSValidation()
+                .accept("application/vnd.api+json")
+                .contentType("application/json")
+                .body("  {\n" +
+                        "        \"nome\": \"" + faker.name().fullName() + "\", " + "\n" +
+                        "        \"cpf\": \"" + generatorCpf + "\", " + "\n" +
+                        "        \"email\": \"" + faker.internet().emailAddress() + "\", " + "\n" +
+                        "        \"valor\": 1300,\n" +
+                        "        \"parcelas\": 3,\n" +
+                        "        \"seguro\": true\n" +
+                        "    }")
+                .when()
+                .post("/simulacoes")
+                .then()
+                .statusCode(201)
+                .and()
+                .log().all().extract().response();
 
     }
 }
