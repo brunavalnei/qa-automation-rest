@@ -56,6 +56,8 @@ public class AssuredSteps {
     @Given("^I send the GET request$")
     public void iSendTheGet() {
         response = given()
+                .contentType("application/json")
+                .accept("application/vnd.tasksmanager.v2")
                 .when()
                 .get(HttpClient.getCompletePath())
                 .then()
@@ -67,6 +69,7 @@ public class AssuredSteps {
     public void ISendThePOSTRequestT() {
         response = given()
                 .contentType("application/json")
+                .accept("application/vnd.tasksmanager.v2")
                 .body(JsonBody.getJsonBodyString())
                 .post(HttpClient.getCompletePath())
                 .then()
@@ -78,6 +81,7 @@ public class AssuredSteps {
     public void iSendThePutRequestTest() throws Throwable {
         response = given()
                 .contentType("application/json")
+                .accept("application/vnd.tasksmanager.v2")
                 .when()
                 .body(JsonBody.getJsonBodyString())
                 .put(HttpClient.getCompletePath())
@@ -88,6 +92,7 @@ public class AssuredSteps {
     public void ISendTheDELETERequest() {
         response = given()
                 .contentType("application/json")
+                .accept("application/vnd.tasksmanager.v2")
                 .delete(HttpClient.getCompletePath())
                 .then()
                 .and()
