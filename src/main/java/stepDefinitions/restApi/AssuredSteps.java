@@ -43,15 +43,23 @@ public class AssuredSteps {
         Hooks.scenario.write(HttpClient.getCompletePath());
     }
 
-    @Given("^I use header$")
-    public void iUseHeader() throws Throwable {
-        request = given()
-                .header("accept", "application/vnd.api+json")
-                .header("Content-type", "application/json")
-                .log()
-                .headers();
+    @Given("^I have basePath with id \"([^\"]*)\"$")
+    public void iHaveBasePathId(String basePath) throws Throwable {
+        Integer id = response.getBody().jsonPath().getInt("data.id");
+        Api.setPath(UriUtils.encodeQuery(JsonBody.replaceVariablesValues(basePath + id), UTF_8));
+        Hooks.scenario.write(HttpClient.getCompletePath());
     }
 
+    @Given("^I save the variable \"([^\"]*)\" with value \"([^\"]*)\"$")
+    public void saveValue(String userKey, String value) throws Throwable {
+        Api.saveVariable(userKey, value);
+        Hooks.scenario.write(Api.getUserParameters().get("${" + userKey + "}"));
+    }
+
+    @Given("^user informs email random$")
+    public void emailRandom() throws Throwable {
+        saveValue("email", faker.internet().emailAddress());
+    }
 
     @Given("^I send the GET request$")
     public void iSendTheGet() {
@@ -121,7 +129,7 @@ public class AssuredSteps {
     @Then("^The response JSON must \"([^\"]*)\" have as the string \"([^\"]*)\"$")
     public void theResponseMustHaveAsString(String key, String value) throws Throwable {
         JsonPath jsonPathEvaluator = response.jsonPath();
-        String message = jsonPathEvaluator.get(key);
+        String message = jsonPathEvaluator.getString(key);
         Assert.assertEquals(message, value);
         Hooks.scenario.write(message);
     }
@@ -137,6 +145,41 @@ public class AssuredSteps {
     public void iPrintTheResponse() throws Throwable {
         ResponseBody body = response.getBody();
         Hooks.scenario.write(body.asPrettyString());
+    }
+
+    @Test
+    public void iHaveLoginAndPassword() throws Throwable {
+        String url = "https://api-de-tarefas.herokuapp.com";
+        RestAssured.baseURI = url;
+        RequestSpecification httpRequest = RestAssured.given();
+        Response response = given()
+                .relaxedHTTPSValidation()
+                .accept("application/vnd.api+json")
+                .contentType("application/json")
+                .body("{\n" +
+                        "    \"name\": \"\",\n" +
+                        "    \"last_name\": \"batista\",\n" +
+                        "    \"email\": \"batatatatat@gmail.com\",\n" +
+                        "    \"age\": \"28\",\n" +
+                        "    \"phone\": \"21984759575\",\n" +
+                        "    \"address\": \"Rua dois\",\n" +
+                        "    \"state\": \"Minas Gerais\",\n" +
+                        "    \"city\": \"Belo Horizonte\"\n" +
+                        "}")
+                .when()
+                .post("/contacts")
+                .then()
+                .statusCode(422)
+                .and()
+                .log().all().extract().response();
+
+        JsonPath jsonPathEvaluator = response.jsonPath();
+        String message = jsonPathEvaluator.getString("errors.name");
+//Assert.assertTrue("não pode ficar em branco", message);
+        //        JsonPath jsonPathEvaluator = response.jsonPath();
+//        String authToken = jsonPathEvaluator.get("errors/0/name");
+        System.out.println(message);
+
     }
 
 }

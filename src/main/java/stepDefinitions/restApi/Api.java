@@ -53,6 +53,7 @@ public class Api {
     }
 
     public static String loadVariable(String userKey){
+
         return Api.getUserParameters().get("${" + userKey + "}");
     }
 
