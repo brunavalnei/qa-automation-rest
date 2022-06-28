@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        features = "src/test/java/features/login.feature"
+        features = "src/test/java/features/POST login.feature"
         , glue = {"stepDefinitions"}
         , plugin = {"pretty", "html:target/site/cucumber-pretty", "json:target/cucumber/cucumber.json"}
         , monochrome = true

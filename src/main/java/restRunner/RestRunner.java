@@ -1,15 +1,16 @@
 package restRunner;
-
-
 import common.utils.FileManagerUtils;
-import common.utils.PropertiesUtil;
 
+
+import common.utils.PropertiesUtil;
 import io.cucumber.core.cli.Main;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
+
 import reports.ReportJson;
 import stepDefinitions.Hooks;
+
 
 import java.io.File;
 import java.io.IOException;
